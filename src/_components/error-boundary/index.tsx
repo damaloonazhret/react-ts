@@ -21,7 +21,7 @@ export class ErrorBoundary extends PureComponent<TProps, TState> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Ошибка в компоненте:', error, errorInfo);
+    console.error('Error in component:', error, errorInfo);
   }
 
   handleReload = () => {

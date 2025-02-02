@@ -12,12 +12,13 @@ export const getSwapiRequestResult = async ({
 }: TProps) => {
   const url = getSwapiByAttribute({ attr: searchAttr });
   const results: Array<Result> = [];
+  const requestUrl = searchValue ? `${url}/?search=${searchValue}` : `${url}`;
 
   try {
-    await fetch(`${url}/?search=${searchValue}`)
+    await fetch(requestUrl)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Error data');
+          throw new Error('Error fetch data');
         }
         return response.json();
       })
@@ -26,8 +27,8 @@ export const getSwapiRequestResult = async ({
           results.push(result);
         });
       });
-  } catch (error) {
-    console.log(error);
+  } catch {
+    throw new Error('Error getSwapiRequestResult');
   }
 
   return results;

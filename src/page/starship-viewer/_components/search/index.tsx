@@ -5,35 +5,67 @@ import { getSwapiRequestResult } from '../../../../api/requests/swapi';
 import { Result } from '../../../../api/requests/swapi/_types.ts';
 import { Loader } from '../../../../_components/loader';
 import { ErrorButton } from '../../../../_components/error-button';
+import { ErrorMessage } from '../../../../_components/error-message';
 
 const cn = classNames.bind(style);
 const BLOCK_NAME = 'Search-panel';
+const LSItem = 'searchValue';
 
 type TState = {
   searchValue: string;
+  errorMessage: string;
   isLoading: boolean;
+  error: boolean;
 };
 
 type TProps = {
   setSearchData: (data: Array<Result>) => void;
 };
 
-const LSItem = 'searchValue';
-
 export class Search extends PureComponent<TProps, TState> {
   state = {
     searchValue: '',
+    errorMessage: '',
     isLoading: false,
+    error: false,
   };
 
+  async fetchData(searchValue: string) {
+    this.setState({ isLoading: true });
+    try {
+      const searchData = await getSwapiRequestResult({ searchValue });
+      return searchData;
+    } catch {
+      this.setErrorState('Something went wrong.');
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  }
+
+  setErrorState(errorMessage: string) {
+    this.setState({ error: true, errorMessage });
+    setTimeout(() => this.setState({ error: false }), 3000);
+  }
+
+  getSavedSearchValue() {
+    return localStorage.getItem(LSItem) || '';
+  }
+
+  saveSearchValue(searchValue: string) {
+    localStorage.setItem(LSItem, searchValue);
+  }
+
+  async loadSearchData(searchValue: string) {
+    const searchData = await this.fetchData(searchValue);
+    if (searchData) {
+      this.props.setSearchData(searchData);
+    }
+  }
+
   async componentDidMount() {
-    const savedSearchValue = localStorage.getItem(LSItem) || '';
-    this.setState({ searchValue: savedSearchValue, isLoading: true });
-    const searchData = await getSwapiRequestResult({
-      searchValue: savedSearchValue,
-    });
-    this.setState({ isLoading: false });
-    this.props.setSearchData(searchData);
+    const savedSearchValue = this.getSavedSearchValue();
+    this.setState({ searchValue: savedSearchValue });
+    await this.loadSearchData(savedSearchValue);
   }
 
   onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,25 +74,17 @@ export class Search extends PureComponent<TProps, TState> {
     this.setState({ searchValue });
   };
 
-  getData = async (searchValue: string) => {
-    localStorage.setItem(LSItem, searchValue);
-    this.setState({ isLoading: true });
-    const searchData = await getSwapiRequestResult({ searchValue });
-    this.setState({ isLoading: false });
-    return searchData;
-  };
-
   onSearchButtonClick = async () => {
     const { searchValue } = this.state;
-    const searchData = await this.getData(searchValue);
-
-    this.props.setSearchData(searchData);
+    this.saveSearchValue(searchValue);
+    await this.loadSearchData(searchValue);
   };
 
   render(): ReactNode {
     return (
       <>
         {this.state.isLoading && <Loader />}
+        {this.state.error && <ErrorMessage message={this.state.errorMessage} />}
         <div className={cn(BLOCK_NAME)}>
           <input
             className={cn(`${BLOCK_NAME}__input`)}
