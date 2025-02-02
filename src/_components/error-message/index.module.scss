@@ -1,3 +1,5 @@
+@import '../../styles/keyframes.css';
+
 .Error-message {
   position: absolute;
   right: 10px;
@@ -11,13 +13,4 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
-
-@keyframes error {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
 }

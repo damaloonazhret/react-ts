@@ -9,6 +9,7 @@ import { ErrorMessage } from '../../../../_components/error-message';
 
 const cn = classNames.bind(style);
 const BLOCK_NAME = 'Search-panel';
+
 const LSItem = 'searchValue';
 
 type TState = {

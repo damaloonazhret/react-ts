@@ -9,13 +9,13 @@
   }
 
   &__input {
+    padding: 4px;
     width: 80%;
     border: 2px solid var(--border-color);
   }
 
   &__btn {
     width: 10%;
-    //border: 2px solid var(--border-color);
     background-color: var(--search-background-color);
   }
 }
