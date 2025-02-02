@@ -18,11 +18,23 @@ type TProps = {
   setSearchData: (data: Array<Result>) => void;
 };
 
+const LSItem = 'searchValue';
+
 export class Search extends PureComponent<TProps, TState> {
   state = {
     searchValue: '',
     isLoading: false,
   };
+
+  async componentDidMount() {
+    const savedSearchValue = localStorage.getItem(LSItem) || '';
+    this.setState({ searchValue: savedSearchValue, isLoading: true });
+    const searchData = await getSwapiRequestResult({
+      searchValue: savedSearchValue,
+    });
+    this.setState({ isLoading: false });
+    this.props.setSearchData(searchData);
+  }
 
   onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -31,19 +43,9 @@ export class Search extends PureComponent<TProps, TState> {
   };
 
   getData = async (searchValue: string) => {
-    const cachedData = localStorage.getItem(searchValue);
-
-    if (cachedData) {
-      return JSON.parse(cachedData);
-    }
+    localStorage.setItem(LSItem, searchValue);
     this.setState({ isLoading: true });
-
     const searchData = await getSwapiRequestResult({ searchValue });
-
-    if (searchData.length > 0) {
-      localStorage.setItem(searchValue, JSON.stringify(searchData));
-    }
-
     this.setState({ isLoading: false });
     return searchData;
   };
