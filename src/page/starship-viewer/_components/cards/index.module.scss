@@ -1,0 +1,8 @@
+.Cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px;
+  justify-content: space-between;
+  border: 1px solid var(--border-color);
+}
