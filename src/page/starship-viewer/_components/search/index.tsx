@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
 import { getSwapiRequestResult } from '../../../../api/requests/swapi';
@@ -23,25 +23,28 @@ export const Search = ({ setSearchData }: TProps) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [searchValue, setSearchValue] = useState<string>('');
 
+  const loadSearchData = useCallback(
+    async (searchValue: string) => {
+      setIsLoading(true);
+      try {
+        const searchData = await getSwapiRequestResult({ searchValue });
+        if (searchData) {
+          setSearchData(searchData);
+        }
+      } catch {
+        handleError({ setErrorMessage, setError });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setSearchData]
+  );
+
   useEffect(() => {
     const savedSearchValue = getSavedSearchValue();
     setSearchValue(savedSearchValue);
     loadSearchData(savedSearchValue);
-  }, []);
-
-  const loadSearchData = async (searchValue: string) => {
-    setIsLoading(true);
-    try {
-      const searchData = await getSwapiRequestResult({ searchValue });
-      if (searchData) {
-        setSearchData(searchData);
-      }
-    } catch {
-      handleError({ setErrorMessage, setError });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [loadSearchData]);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
