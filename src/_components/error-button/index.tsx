@@ -1,32 +1,26 @@
-import { PureComponent } from 'react';
+import { useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
-
-type TState = {
-  error: boolean;
-};
 
 const cn = classNames.bind(style);
 const BLOCK_NAME = 'Error-button';
 
-export class ErrorButton extends PureComponent<object, TState> {
-  state = {
-    error: false,
+export const ErrorButton = () => {
+  const [error, setError] = useState<boolean>(false);
+
+  const throwError = () => {
+    setError(true);
   };
 
-  throwError = () => {
-    this.setState({ error: true });
-  };
+  if (error) {
+    throw new Error('error inside error-button component');
+  }
 
-  render() {
-    if (this.state.error) {
-      throw new Error('error inside error-button component');
-    }
-
-    return (
-      <button className={cn(BLOCK_NAME)} onClick={this.throwError}>
+  return (
+    <>
+      <button className={cn(BLOCK_NAME)} onClick={throwError}>
         Throw error
       </button>
-    );
-  }
-}
+    </>
+  );
+};

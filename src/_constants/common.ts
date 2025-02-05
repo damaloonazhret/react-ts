@@ -6,3 +6,7 @@ export enum EAttributes {
   STARSHIPS = 'starships',
   VEHICLES = 'vehicles',
 }
+
+export const LSItem = 'searchValue';
+
+export const ERROR_DELAY = 3000;
