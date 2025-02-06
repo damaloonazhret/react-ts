@@ -1,0 +1,19 @@
+@import '../../styles/keyframes.css';
+
+.Loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  max-width: 1280px;
+  z-index: 1;
+
+  &__circular {
+    position: relative;
+    top: 50%;
+    height: 50%;
+    display: inline-block;
+    border: 4px solid transparent;
+    border-radius: 50%;
+    animation: rotate 1s linear infinite alternate;
+  }
+}

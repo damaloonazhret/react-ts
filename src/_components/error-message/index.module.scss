@@ -1,0 +1,16 @@
+@import '../../styles/keyframes.css';
+
+.Error-message {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 20%;
+  height: 10%;
+  background-color: rgb(255, 60, 60);
+  animation: error ease-in 0.3s;
+  border-radius: var(--border-radius);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

@@ -1,0 +1,23 @@
+.Search-panel {
+  display: flex;
+  column-gap: 20px;
+  justify-content: space-between;
+
+  &__input,
+  &__btn {
+    border-radius: var(--border-radius);
+  }
+
+  &__input {
+    padding: 4px;
+    width: 50%;
+    border: 2px solid var(--border-color);
+    cursor: text;
+  }
+
+  &__btn {
+    cursor: pointer;
+    width: 10%;
+    background-color: var(--search-background-color);
+  }
+}
