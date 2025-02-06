@@ -6,9 +6,9 @@ import { Result } from '../../../../api/requests/swapi/_types.ts';
 import { Loader } from '../../../../_components/loader';
 import { ErrorButton } from '../../../../_components/error-button';
 import { ErrorMessage } from '../../../../_components/error-message';
-import { getSavedSearchValue } from './_utils/get-saved-search-value.ts';
-import { saveSearchValue } from './_utils/save-search-value.ts';
 import { handleError } from './_utils/handle-error.ts';
+import { useLocalStorage } from '../../hooks/useLocalStorage.ts';
+import { LSItem } from '../../../../_constants/common.ts';
 
 const cn = classNames.bind(style);
 const BLOCK_NAME = 'Search-panel';
@@ -22,6 +22,7 @@ export const Search = ({ setSearchData }: TProps) => {
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [searchValue, setSearchValue] = useState<string>('');
+  const { getItem, setItem } = useLocalStorage();
 
   const loadSearchData = useCallback(
     async (searchValue: string) => {
@@ -41,10 +42,11 @@ export const Search = ({ setSearchData }: TProps) => {
   );
 
   useEffect(() => {
-    const savedSearchValue = getSavedSearchValue();
+    const savedSearchValue = getItem<string>(LSItem);
+    console.log(savedSearchValue);
     setSearchValue(savedSearchValue);
     loadSearchData(savedSearchValue);
-  }, [loadSearchData]);
+  }, [getItem, loadSearchData]);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -53,7 +55,7 @@ export const Search = ({ setSearchData }: TProps) => {
   };
 
   const onSearchButtonClick = async () => {
-    saveSearchValue({ searchValue });
+    setItem<string>({ key: LSItem, value: searchValue });
     await loadSearchData(searchValue);
   };
 
