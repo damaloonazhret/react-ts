@@ -1,4 +1,4 @@
-import { describe, it } from 'vitest';
+import { describe, it, vi } from 'vitest';
 import { AdditionalCard } from '../index.tsx';
 import { render } from '@testing-library/react';
 import { TWorld } from '../../../../../../api/requests/swapi/homeworld/_types.ts';
@@ -21,7 +21,10 @@ export const mockWorld: TWorld = {
 };
 
 describe('Additional Card', () => {
+  const handleClose = vi.fn();
   it('renders correctly', () => {
-    render(<AdditionalCard additionalInfo={mockWorld} />);
+    render(
+      <AdditionalCard handleClose={handleClose} additionalInfo={mockWorld} />
+    );
   });
 });
