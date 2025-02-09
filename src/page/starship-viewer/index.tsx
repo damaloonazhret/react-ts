@@ -20,7 +20,7 @@ export const Index = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [setSearchParams] = useSearchParams();
+  const [_searchParams, setSearchParams] = useSearchParams();
 
   const loadSearchData = useCallback(
     async ({ searchValue, page }: { searchValue: string; page: string }) => {
