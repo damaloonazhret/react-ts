@@ -3,7 +3,7 @@ import style from './index.module.scss';
 import { Root } from '../../../../api/requests/swapi/person/_types.ts';
 import { Card } from './card';
 import { getHomeWorldRequest } from '../../../../api/requests/swapi/homeworld';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { TWorld } from '../../../../api/requests/swapi/homeworld/_types.ts';
 import { Loader } from '../../../../_components/loader';
 import { AdditionalCard } from './additionalCard';
@@ -21,6 +21,8 @@ type TProps = {
 
 export function Cards({ searchData, setSearchParams }: TProps) {
   const [additionalInfo, setAdditionalInfo] = useState<TWorld | null>(null);
+  const [showAdditionalCards, setShowAdditionalCards] =
+    useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { page, homeworldID } = useParams();
@@ -34,6 +36,7 @@ export function Cards({ searchData, setSearchParams }: TProps) {
         setSearchParams({ search: savedSearchValue });
       }
       setIsLoading(true);
+      setShowAdditionalCards(true);
       const homeWorld = await getHomeWorldRequest({ id });
       setAdditionalInfo(homeWorld);
       setIsLoading(false);
@@ -43,12 +46,14 @@ export function Cards({ searchData, setSearchParams }: TProps) {
 
   const handleClose = () => {
     setAdditionalInfo(null);
+    setShowAdditionalCards(false);
+    navigate(`/page/${page}`);
   };
 
-  const handleClosePannel = () => {
-    if (additionalInfo) {
-      setAdditionalInfo(null);
-    }
+  const handleClosePanel = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const contain = target.className.includes('common');
+    if (additionalInfo && contain) handleClose();
   };
 
   useEffect(() => {
@@ -63,7 +68,7 @@ export function Cards({ searchData, setSearchParams }: TProps) {
 
   return (
     <div className={cn(BLOCK_NAME)}>
-      <div onClick={handleClosePannel} className={cn(`${BLOCK_NAME}__common`)}>
+      <div onClick={handleClosePanel} className={cn(`${BLOCK_NAME}__common`)}>
         {searchData.results.map((data) => (
           <Card
             key={data.name}
@@ -72,16 +77,18 @@ export function Cards({ searchData, setSearchParams }: TProps) {
           />
         ))}
       </div>
-      <div className={cn(`${BLOCK_NAME}__additional`)}>
-        {isLoading ? (
-          <Loader />
-        ) : additionalInfo ? (
-          <AdditionalCard
-            additionalInfo={additionalInfo}
-            handleClose={handleClose}
-          />
-        ) : null}
-      </div>
+      {showAdditionalCards && (
+        <div className={cn(`${BLOCK_NAME}__additional`)}>
+          {isLoading ? (
+            <Loader />
+          ) : additionalInfo ? (
+            <AdditionalCard
+              additionalInfo={additionalInfo}
+              handleClose={handleClose}
+            />
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

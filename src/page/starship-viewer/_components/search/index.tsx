@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
 import { ErrorMessage } from '../../../../_components/error-message';
@@ -31,15 +31,19 @@ export const Search = ({
 }: TProps) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const { getItem, setItem } = useLocalStorage();
-
   const { page } = useParams();
+  const refPage = useRef<string | undefined>(page);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const savedSearchValue = getItem<string>(LSItem);
     setSearchValue(savedSearchValue);
-    loadSearchData({ searchValue: savedSearchValue, page: page || '1' });
-  }, [page, getItem, loadSearchData]);
+    loadSearchData({
+      searchValue: savedSearchValue,
+      page: refPage.current || '1',
+    });
+  }, [getItem, loadSearchData]);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
