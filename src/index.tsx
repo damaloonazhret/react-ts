@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './styles/global.css';
 import { Index } from './page/starship-viewer';
 import { createBrowserRouter, RouterProvider } from 'react-router';
-import { ErrorBoundary } from './_components/error-boundary';
+import { NotFound } from './_components/not-found';
 
 const root = document.getElementById('root');
 
@@ -20,14 +20,16 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '*',
+    element: <NotFound />,
+  },
 ]);
 
 if (root) {
   createRoot(root).render(
     <StrictMode>
-      <ErrorBoundary>
-        <RouterProvider router={router} />
-      </ErrorBoundary>
+      <RouterProvider router={router} />
     </StrictMode>
   );
 }

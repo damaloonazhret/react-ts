@@ -9,6 +9,7 @@ import { getSwapiRequestResult } from '../../api/requests/swapi/person';
 import { handleError } from './_components/search/_utils/handle-error.ts';
 import { Loader } from '../../_components/loader';
 import { useSearchParams } from 'react-router';
+import { ErrorBoundary } from '../../_components/error-boundary';
 
 export const Index = () => {
   const [searchData, setSearchData] = useState<Root>({
@@ -43,26 +44,28 @@ export const Index = () => {
   );
 
   return (
-    <PageLayout>
-      <Search
-        isLoading={isLoading}
-        error={error}
-        errorMessage={errorMessage}
-        loadSearchData={loadSearchData}
-        setSearchParams={setSearchParams}
-      />
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <Cards searchData={searchData} setSearchParams={setSearchParams} />
-          <Pagination
-            searchData={searchData}
-            loadSearchData={loadSearchData}
-            setSearchParams={setSearchParams}
-          />
-        </>
-      )}
-    </PageLayout>
+    <ErrorBoundary>
+      <PageLayout>
+        <Search
+          isLoading={isLoading}
+          error={error}
+          errorMessage={errorMessage}
+          loadSearchData={loadSearchData}
+          setSearchParams={setSearchParams}
+        />
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <Cards searchData={searchData} setSearchParams={setSearchParams} />
+            <Pagination
+              searchData={searchData}
+              loadSearchData={loadSearchData}
+              setSearchParams={setSearchParams}
+            />
+          </>
+        )}
+      </PageLayout>
+    </ErrorBoundary>
   );
 };
