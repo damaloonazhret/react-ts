@@ -59,7 +59,7 @@ export const Index = () => {
           <>
             <Cards searchData={searchData} setSearchParams={setSearchParams} />
             <Pagination
-              searchData={searchData}
+              count={searchData.count}
               loadSearchData={loadSearchData}
               setSearchParams={setSearchParams}
             />

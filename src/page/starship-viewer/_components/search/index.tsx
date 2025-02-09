@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
-import { ErrorButton } from '../../../../_components/error-button';
 import { ErrorMessage } from '../../../../_components/error-message';
 import { useLocalStorage } from '../../hooks/useLocalStorage.ts';
 import { LSItem } from '../../../../_constants/common.ts';
@@ -67,7 +66,6 @@ export const Search = ({
           onChange={onInputChange}
           value={searchValue}
         />
-        <ErrorButton />
         <button
           className={cn(`${BLOCK_NAME}__btn`)}
           type="button"

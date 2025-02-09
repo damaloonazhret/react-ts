@@ -8,7 +8,7 @@ type TProps = {
   message: string;
 };
 
-export function ErrorMessage(props: TProps) {
+export const ErrorMessage = (props: TProps) => {
   const errorMessage = props.message;
   return (
     <div className={cn(BLOCK_NAME)}>
@@ -16,4 +16,4 @@ export function ErrorMessage(props: TProps) {
       {errorMessage && <span>message: {errorMessage}</span>}
     </div>
   );
-}
+};

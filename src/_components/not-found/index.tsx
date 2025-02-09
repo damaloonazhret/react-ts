@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
 const cn = classNames.bind(style);

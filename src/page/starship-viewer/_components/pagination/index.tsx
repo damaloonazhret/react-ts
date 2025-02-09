@@ -1,4 +1,3 @@
-import { Root } from '../../../../api/requests/swapi/person/_types.ts';
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
 import { NavLink, SetURLSearchParams } from 'react-router';
@@ -6,7 +5,7 @@ import { ITEMS_PER_PAGE, LSItem } from '../../../../_constants/common.ts';
 import { useLocalStorage } from '../../hooks/useLocalStorage.ts';
 
 type TProps = {
-  searchData: Root;
+  count: number;
   setSearchParams: SetURLSearchParams;
   loadSearchData: ({
     searchValue,
@@ -21,11 +20,11 @@ const cn = classNames.bind(style);
 const BLOCK_NAME = 'Pagination';
 
 export const Pagination = ({
-  searchData,
+  count,
   loadSearchData,
   setSearchParams,
 }: TProps) => {
-  const pages = Math.ceil(searchData.count / ITEMS_PER_PAGE);
+  const pages = Math.ceil(count / ITEMS_PER_PAGE);
   const { getItem } = useLocalStorage();
 
   return (

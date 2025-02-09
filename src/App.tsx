@@ -11,12 +11,10 @@ const router = createBrowserRouter([
   {
     path: '/page/:page',
     element: <Index />,
-    // loader: ({ params }) => fetchPageData(params.page),
     children: [
       {
         path: 'homeworld/:homeworldID',
         element: <Index />,
-        // loader: ({ params }) => fetchPersonData(params.personId),
       },
     ],
   },

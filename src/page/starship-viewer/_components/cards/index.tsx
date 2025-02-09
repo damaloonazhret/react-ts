@@ -41,6 +41,16 @@ export function Cards({ searchData, setSearchParams }: TProps) {
     [getItem, navigate, page, setSearchParams]
   );
 
+  const handleClose = () => {
+    setAdditionalInfo(null);
+  };
+
+  const handleClosePannel = () => {
+    if (additionalInfo) {
+      setAdditionalInfo(null);
+    }
+  };
+
   useEffect(() => {
     if (homeworldID) {
       requestHomeWorld({ id: homeworldID });
@@ -53,7 +63,7 @@ export function Cards({ searchData, setSearchParams }: TProps) {
 
   return (
     <div className={cn(BLOCK_NAME)}>
-      <div className={cn(`${BLOCK_NAME}__common`)}>
+      <div onClick={handleClosePannel} className={cn(`${BLOCK_NAME}__common`)}>
         {searchData.results.map((data) => (
           <Card
             key={data.name}
@@ -62,15 +72,16 @@ export function Cards({ searchData, setSearchParams }: TProps) {
           />
         ))}
       </div>
-      {additionalInfo && (
-        <div className={cn(`${BLOCK_NAME}__additional`)}>
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <AdditionalCard additionalInfo={additionalInfo} />
-          )}
-        </div>
-      )}
+      <div className={cn(`${BLOCK_NAME}__additional`)}>
+        {isLoading ? (
+          <Loader />
+        ) : additionalInfo ? (
+          <AdditionalCard
+            additionalInfo={additionalInfo}
+            handleClose={handleClose}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }
