@@ -10,3 +10,5 @@ export enum EAttributes {
 export const LSItem = 'searchValue';
 
 export const ERROR_DELAY = 3000;
+
+export const ITEMS_PER_PAGE = 10;

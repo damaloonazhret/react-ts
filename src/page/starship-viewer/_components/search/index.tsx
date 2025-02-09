@@ -1,52 +1,46 @@
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
-import { getSwapiRequestResult } from '../../../../api/requests/swapi';
-import { Result } from '../../../../api/requests/swapi/_types.ts';
 import { Loader } from '../../../../_components/loader';
 import { ErrorButton } from '../../../../_components/error-button';
 import { ErrorMessage } from '../../../../_components/error-message';
-import { handleError } from './_utils/handle-error.ts';
 import { useLocalStorage } from '../../hooks/useLocalStorage.ts';
 import { LSItem } from '../../../../_constants/common.ts';
+import { useNavigate, useParams } from 'react-router';
 
 const cn = classNames.bind(style);
 const BLOCK_NAME = 'Search-panel';
 
 type TProps = {
-  setSearchData: (data: Array<Result>) => void;
+  isLoading: boolean;
+  error: boolean;
+  errorMessage: string;
+  loadSearchData: ({
+    searchValue,
+    page,
+  }: {
+    searchValue: string;
+    page: string;
+  }) => Promise<void>;
 };
 
-export const Search = ({ setSearchData }: TProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+export const Search = ({
+  errorMessage,
+  error,
+  isLoading,
+  loadSearchData,
+}: TProps) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const { getItem, setItem } = useLocalStorage();
 
-  const loadSearchData = useCallback(
-    async (searchValue: string) => {
-      setIsLoading(true);
-      try {
-        const searchData = await getSwapiRequestResult({ searchValue });
-        if (searchData) {
-          setSearchData(searchData);
-        }
-      } catch {
-        handleError({ setErrorMessage, setError });
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [setSearchData]
-  );
+  const { page } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const savedSearchValue = getItem<string>(LSItem);
-    console.log(savedSearchValue);
     setSearchValue(savedSearchValue);
-    loadSearchData(savedSearchValue);
-  }, [getItem, loadSearchData]);
+    loadSearchData({ searchValue: savedSearchValue, page: page || '1' });
+  }, [getItem, loadSearchData, page]);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -56,7 +50,8 @@ export const Search = ({ setSearchData }: TProps) => {
 
   const onSearchButtonClick = async () => {
     setItem<string>({ key: LSItem, value: searchValue });
-    await loadSearchData(searchValue);
+    navigate(`/page/1`);
+    await loadSearchData({ searchValue, page: '1' });
   };
 
   return (

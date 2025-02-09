@@ -1,35 +1,32 @@
 import { getSwapiByAttribute } from '../../endpoints/swapi';
-import { Result, Root } from './_types.ts';
+import { Root } from './_types.ts';
 
 type TProps = {
   searchAttr?: string;
   searchValue?: string;
+  page?: string;
 };
 
 export const getSwapiRequestResult = async ({
   searchAttr,
   searchValue = '',
+  page = '1',
 }: TProps) => {
   const url = getSwapiByAttribute({ attr: searchAttr });
-  const results: Array<Result> = [];
-  const requestUrl = searchValue ? `${url}/?search=${searchValue}` : `${url}`;
+  const requestUrl = searchValue
+    ? `${url}/?search=${searchValue}&page=${page}`
+    : `${url}?page=${page}`;
 
   try {
-    await fetch(requestUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Error fetch data');
-        }
-        return response.json();
-      })
-      .then((data: Root) => {
-        data.results.forEach((result: Result) => {
-          results.push(result);
-        });
-      });
+    const response = await fetch(requestUrl);
+
+    if (!response.ok) {
+      throw new Error('Error fetching data');
+    }
+
+    const data: Root = await response.json();
+    return data;
   } catch {
     throw new Error('Error getSwapiRequestResult');
   }
-
-  return results;
 };
