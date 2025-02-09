@@ -1,4 +1,4 @@
-import { getSwapiByAttribute } from '../../endpoints/swapi';
+import { getSwapiByAttribute } from '../../../endpoints/swapi';
 import { Root } from './_types.ts';
 
 type TProps = {

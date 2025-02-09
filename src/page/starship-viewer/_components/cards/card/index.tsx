@@ -1,17 +1,25 @@
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
-import { Result } from '../../../../../api/requests/swapi/_types.ts';
+import { Result } from '../../../../../api/requests/swapi/person/_types.ts';
 
 const cn = classNames.bind(style);
 const BLOCK_NAME = 'Card';
 
 type TProps = {
   searchData: Result;
+  requestHomeWorld: ({ id }: { id: string }) => void;
 };
 
-export const Card = ({ searchData }: TProps) => {
+export const Card = ({ searchData, requestHomeWorld }: TProps) => {
+  const handleClick = () => {
+    const planetId = searchData.homeworld.split('/').filter(Boolean).pop();
+    if (planetId) {
+      requestHomeWorld({ id: planetId });
+    }
+  };
+
   return (
-    <div className={cn(BLOCK_NAME)}>
+    <div onClick={handleClick} className={cn(BLOCK_NAME)}>
       <div>{searchData.name}</div>
       <div>{searchData.created}</div>
       <div>{searchData.birth_year}</div>

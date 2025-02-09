@@ -1,9 +1,28 @@
 .Cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 10px;
-  justify-content: space-between;
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
+  //display: grid;
+  //grid-template-columns: 2fr 1fr;
+  display: flex;
+  transition: 1s;
+
+  &__common {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px;
+    justify-content: space-between;
+    flex-shrink: 7;
+  }
+
+  &__additional {
+    //width: 33vw;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px;
+    flex-basis: 30%;
+  }
 }

@@ -2,11 +2,13 @@ import './index.scss';
 import { PageLayout } from '../../_layouts/page-layout';
 import { Search } from './_components/search';
 import { useCallback, useState } from 'react';
-import { Root } from '../../api/requests/swapi/_types.ts';
+import { Root } from '../../api/requests/swapi/person/_types.ts';
 import { Cards } from './_components/cards';
 import { Pagination } from './_components/pagination';
-import { getSwapiRequestResult } from '../../api/requests/swapi';
+import { getSwapiRequestResult } from '../../api/requests/swapi/person';
 import { handleError } from './_components/search/_utils/handle-error.ts';
+import { Loader } from '../../_components/loader';
+import { useSearchParams } from 'react-router';
 
 export const Index = () => {
   const [searchData, setSearchData] = useState<Root>({
@@ -18,6 +20,7 @@ export const Index = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [setSearchParams] = useSearchParams();
 
   const loadSearchData = useCallback(
     async ({ searchValue, page }: { searchValue: string; page: string }) => {
@@ -46,13 +49,20 @@ export const Index = () => {
         error={error}
         errorMessage={errorMessage}
         loadSearchData={loadSearchData}
+        setSearchParams={setSearchParams}
       />
-      <Cards searchData={searchData} />
-      <Pagination
-        isLoading={isLoading}
-        searchData={searchData}
-        loadSearchData={loadSearchData}
-      />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <Cards searchData={searchData} setSearchParams={setSearchParams} />
+          <Pagination
+            searchData={searchData}
+            loadSearchData={loadSearchData}
+            setSearchParams={setSearchParams}
+          />
+        </>
+      )}
     </PageLayout>
   );
 };

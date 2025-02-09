@@ -1,12 +1,11 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import style from './index.module.scss';
-import { Loader } from '../../../../_components/loader';
 import { ErrorButton } from '../../../../_components/error-button';
 import { ErrorMessage } from '../../../../_components/error-message';
 import { useLocalStorage } from '../../hooks/useLocalStorage.ts';
 import { LSItem } from '../../../../_constants/common.ts';
-import { useNavigate, useParams } from 'react-router';
+import { SetURLSearchParams, useNavigate, useParams } from 'react-router';
 
 const cn = classNames.bind(style);
 const BLOCK_NAME = 'Search-panel';
@@ -15,6 +14,7 @@ type TProps = {
   isLoading: boolean;
   error: boolean;
   errorMessage: string;
+  setSearchParams: SetURLSearchParams;
   loadSearchData: ({
     searchValue,
     page,
@@ -27,8 +27,8 @@ type TProps = {
 export const Search = ({
   errorMessage,
   error,
-  isLoading,
   loadSearchData,
+  setSearchParams,
 }: TProps) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const { getItem, setItem } = useLocalStorage();
@@ -40,7 +40,7 @@ export const Search = ({
     const savedSearchValue = getItem<string>(LSItem);
     setSearchValue(savedSearchValue);
     loadSearchData({ searchValue: savedSearchValue, page: page || '1' });
-  }, [getItem, loadSearchData, page]);
+  }, [page, getItem, loadSearchData]);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -51,12 +51,14 @@ export const Search = ({
   const onSearchButtonClick = async () => {
     setItem<string>({ key: LSItem, value: searchValue });
     navigate(`/page/1`);
+    if (searchValue) {
+      setSearchParams({ search: searchValue });
+    }
     await loadSearchData({ searchValue, page: '1' });
   };
 
   return (
     <>
-      {isLoading && <Loader />}
       {error && <ErrorMessage message={errorMessage} />}
       <div className={cn(BLOCK_NAME)}>
         <input

@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     // loader: ({ params }) => fetchPageData(params.page),
     children: [
       {
-        path: 'person/:personId',
+        path: 'homeworld/:homeworldID',
         element: <Index />,
         // loader: ({ params }) => fetchPersonData(params.personId),
       },
